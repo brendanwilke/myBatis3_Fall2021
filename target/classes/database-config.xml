@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<typeAliases>
+  <typeAlias alias="Employee" type="com.domain.Employee"/>
+  <typeAlias alias="Participator" type="com.domain.Participator" />
+  <typeAlias alias="Author" type="com.domain.Author" />
+  <typeAlias alias="Reviewer" type="com.domain.Reviewer" />
+  <typeAlias alias="Paper" type="com.domain.Paper" />
+  <typeAlias alias="Writes" type="com.domain.Writes" />
+  <typeAlias alias="Reviews" type="com.domain.Reviews" />
+</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver" />
+				<property name="url" value="*****" />
+				<property name="username" value="wilke" />
+				<property name="password" value="006157238" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/mapper/CompanyMapper.xml" />
+	</mappers>
+</configuration>

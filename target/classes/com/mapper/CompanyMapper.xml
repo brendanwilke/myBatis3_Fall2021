@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.CompanyMapper">
+	
+	<resultMap id="EmployeeResult" type="Employee">
+		<id property="ssn" column="ssn" />
+		<result property="fname" column="fname" />
+		<result property="lname" column="lname" />
+		<result property="salary" column="salary" />
+	</resultMap>
+
+	<select id="selectAll" resultMap="EmployeeResult">
+		SELECT fname, lname, ssn, salary FROM employee
+	</select>
+	
+	<select id="selectEmpBySalary" parameterType = "BigDecimal" resultMap="EmployeeResult">
+		SELECT fname, lname, ssn, salary FROM employee where salary > #{salary}
+	</select>
+	
+	<select id="selectAllDepartments" resultType="hashmap">
+	
+	<!-- 
+	select * from department
+	changing this to include a generic query.
+	 -->
+	
+		SELECT D.ESSN, COUNT(D.DEPENDENT_NAME) "NUMBER_DEP"
+		FROM DEPENDENT D
+		GROUP BY D.ESSN
+		HAVING COUNT(D.DEPENDENT_NAME) >= 2
+		
+	</select>
+	
+	<insert id="insertEmployee" parameterType="com.domain.Employee">
+		INSERT INTO employee(ssn,fname,lname,salary) VALUES (#{ssn},#{fname},#{lname},#{salary})
+	
+	</insert>
+
+	<resultMap id="ParticipatorResult" type="Participator">
+		<id property="email" column="email" />
+		<result property="firstname" column="firstname" />
+		<result property="minit" column="minit" />
+		<result property="lastname" column="lastname" />
+		<result property="phone" column="phone" />
+		<result property="affiliation" column="affiliation" />
+	</resultMap>
+
+	<select id="selectAllPartsEmail" resultMap="ParticipatorResult">
+		SELECT * FROM participator
+	</select>
+
+	<insert id="insertParticipator" parameterType="com.domain.Participator">
+		INSERT INTO participator(email, firstname, minit, lastname, phone, affiliation) VALUES (#{email}, #{firstname}, #{minit}, #{lastname}, #{phone}, #{affiliation})
+
+	</insert>
+
+	<resultMap id="AuthorResult" type="Author">
+		<id property="email" column="email" />
+	</resultMap>
+
+	<select id="selectAllAuthors" resultMap="AuthorResult">
+		SELECT email FROM author
+	</select>
+
+	<insert id="insertAuthor" parameterType="com.domain.Author">
+		INSERT INTO author(email) VALUES (#{email})
+
+	</insert>
+
+	<resultMap id="ReviewerResult" type="Reviewer">
+		<id property="email" column="email" />
+	</resultMap>
+
+	<select id="selectAllReviewers" resultMap="ReviewerResult">
+		SELECT email FROM reviewer
+	</select>
+
+	<insert id="insertReviewer" parameterType="com.domain.Reviewer">
+		INSERT INTO reviewer(email) VALUES (#{email})
+
+	</insert>
+
+	<resultMap id="PaperResult" type="Paper">
+		<id property="paperid" column="paperid" />
+		<result property="title" column="title" />
+		<result property="filename" column="filename" />
+		<result property="contactauthoremail" column="contactauthoremail" />
+		<result property="_abstract" column="abstract" />
+	</resultMap>
+
+	<select id="selectAllPapers" resultMap="PaperResult">
+		SELECT * FROM paper
+		ORDER BY paperid ASC
+	</select>
+
+	<select id="selectPapersAbove7" resultMap="PaperResult">
+		SELECT paper.paperid, paper.title, AVG(overallrecomm)
+		FROM reviews
+		INNER JOIN paper on paper.paperid = reviews.paperid
+		GROUP BY paper.paperid, paper.title
+		HAVING avg(overallrecomm) > 7.0
+		ORDER BY paper.paperid asc
+	</select>
+
+	<insert id="insertPaper" parameterType="com.domain.Paper">
+		INSERT INTO paper(paperid, title, filename, contactauthoremail, abstract) 
+		VALUES (#{paperid}, #{title}, #{filename}, #{contactauthoremail}, #{_abstract})
+	</insert>
+
+	<resultMap id="WritesResult" type="Writes">
+		<id property="paperid" column="paperid" />
+		<id property="email" column="email" />
+	</resultMap>
+
+	<insert id="insertWrites" parameterType="com.domain.Writes">
+		INSERT INTO writes(paperid, email)
+		VALUES (#{paperid}, #{email})
+	</insert>
+
+	<resultMap id="ReviewsResult" type="com.domain.Reviews">
+		<id property="revemail" column="revemail"/>
+		<id property="paperid" column="paperid" />
+		<result property="techmerit" column="techmerit" />
+		<result property="readability" column="readability" />
+		<result property="originality" column="originality" />
+		<result property="relevance" column="relevance" />
+		<result property="overallrecomm" column="overallrecomm" />
+		<result property="commentforcommittee" column="commentforcommittee" />
+		<result property="commentforauthor" column="commentforauthor" />
+	</resultMap>
+
+	<insert id="insertReview" parameterType="com.domain.Reviews">
+		INSERT INTO reviews(revemail, paperid, techmerit, readability, originality, relavance, overallrecomm, commentforcommittee, commentforauthor)
+		VALUES (#{revemail}, #{paperid}, #{techmerit}, #{readability}, #{originality}, #{relavance}, #{overallrecomm}, #{commentforcommittee}, #{commentforauthor})
+	</insert>
+
+</mapper>
